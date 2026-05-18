@@ -45,6 +45,7 @@
 
         <div class="control-group">
           <button id="btn-winners" class="btn btn-icon">📜 中奖名单</button>
+          <button id="btn-history" class="btn btn-icon">📋 历史记录</button>
           <button id="btn-settings" class="btn btn-icon">⚙️ 设置</button>
         </div>
       </div>
@@ -102,6 +103,23 @@
           <label>背景图片</label>
           <input type="file" id="bg-input" accept="image/*">
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="history-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📋 历史记录</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="history-list" class="history-list">
+          <div class="history-empty">暂无历史记录</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-clear-history" class="btn btn-danger">清空历史</button>
       </div>
     </div>
   </div>
