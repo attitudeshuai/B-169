@@ -352,6 +352,136 @@ input[type="number"] {
     flex: 0 0 80px;
 }
 
+/* History Panel */
+.history-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 380px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border-left: 1px solid var(--glass-border);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.history-panel-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-panel-header h3 {
+    font-size: 1.2rem;
+    color: #ffd700;
+}
+
+.history-panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.history-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.history-item-prize {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.history-item-winner {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.history-item-detail {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.history-item-time {
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.history-empty {
+    text-align: center;
+    color: #64748b;
+    padding: 60px 20px;
+    font-size: 0.95rem;
+}
+
+/* Responsive - History Panel */
+@media (max-width: 768px) {
+    .history-panel {
+        width: 100%;
+    }
+
+    .history-panel-header {
+        padding: 15px;
+    }
+
+    .history-panel-header h3 {
+        font-size: 1.05rem;
+    }
+
+    .history-item {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-panel-header {
+        padding: 12px;
+    }
+
+    .history-panel-header h3 {
+        font-size: 0.95rem;
+    }
+}
+
 /* Celebration Overlay */
 .overlay {
     position: fixed;

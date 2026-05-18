@@ -45,6 +45,7 @@
 
         <div class="control-group">
           <button id="btn-winners" class="btn btn-icon">📜 中奖名单</button>
+          <button id="btn-history" class="btn btn-icon">📋 历史记录</button>
           <button id="btn-settings" class="btn btn-icon">⚙️ 设置</button>
         </div>
       </div>
@@ -74,6 +75,20 @@
       <div class="modal-footer">
         <button id="btn-export" class="btn btn-primary">导出 Excel</button>
       </div>
+    </div>
+  </div>
+
+  <div id="history-panel" class="history-panel hidden">
+    <div class="history-panel-header">
+      <h3>📋 抽奖历史记录</h3>
+      <div class="history-panel-actions">
+        <button id="btn-clear-history" class="btn btn-danger small">一键清空</button>
+        <button id="btn-close-history" class="close-history-btn">&times;</button>
+      </div>
+    </div>
+    <div class="history-panel-body">
+      <ul id="history-list" class="history-list"></ul>
+      <div id="history-empty" class="history-empty">暂无历史记录</div>
     </div>
   </div>
 

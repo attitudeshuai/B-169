@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAction: document.getElementById('btn-action'), // Start/Stop
         btnReset: document.getElementById('btn-reset'),
         btnWinners: document.getElementById('btn-winners'),
+        btnHistory: document.getElementById('btn-history'),
         btnSettings: document.getElementById('btn-settings'),
         prizeList: document.getElementById('prize-list'),
         participantCount: document.getElementById('participant-count'),
@@ -34,7 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Winner Table
         winnerTableBody: document.querySelector('#winner-table tbody'),
-        btnExport: document.getElementById('btn-export')
+        btnExport: document.getElementById('btn-export'),
+
+        // History Panel
+        historyPanel: document.getElementById('history-panel'),
+        historyList: document.getElementById('history-list'),
+        historyEmpty: document.getElementById('history-empty'),
+        btnCloseHistory: document.getElementById('btn-close-history'),
+        btnClearHistory: document.getElementById('btn-clear-history')
     };
 
     let isRunning = false;
@@ -134,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Commit
             DataManager.addWinner(winner, prizeId);
+            DataManager.addHistoryRecord(prize.name, winner);
             
             // Visual Stop
             visual.setSpinning(false);
@@ -178,6 +187,39 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('winner-info').textContent = `${winner.phone || ''} | ${winner.department || ''}`;
         document.getElementById('winner-prize').textContent = `获得: ${prizeName}`;
         els.overlay.classList.remove('hidden');
+    }
+
+    function formatTime(isoStr) {
+        const d = new Date(isoStr);
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+
+    function renderHistory() {
+        const history = DataManager.getHistory();
+        els.historyList.innerHTML = '';
+        if (!history || history.length === 0) {
+            els.historyEmpty.classList.remove('hidden');
+            els.historyList.classList.add('hidden');
+        } else {
+            els.historyEmpty.classList.add('hidden');
+            els.historyList.classList.remove('hidden');
+            history.forEach(record => {
+                if (!record || !record.winner) return;
+                const li = document.createElement('li');
+                li.className = 'history-item';
+                const detailParts = [];
+                if (record.winner.phone) detailParts.push(record.winner.phone);
+                if (record.winner.department) detailParts.push(record.winner.department);
+                li.innerHTML = `
+                    <div class="history-item-prize">${record.prizeName || '未知奖项'}</div>
+                    <div class="history-item-winner">${record.winner.name || '未知'}</div>
+                    ${detailParts.length ? `<div class="history-item-detail">${detailParts.join(' | ')}</div>` : ''}
+                    <div class="history-item-time">${record.time ? formatTime(record.time) : ''}</div>
+                `;
+                els.historyList.appendChild(li);
+            });
+        }
     }
 
     // --- Event Listeners ---
@@ -281,6 +323,36 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     els.btnSettings.onclick = () => openModal(els.settingsModal);
+
+    els.btnHistory.onclick = () => {
+        renderHistory();
+        els.historyPanel.classList.remove('hidden');
+    };
+
+    els.btnCloseHistory.onclick = () => {
+        els.historyPanel.classList.add('hidden');
+    };
+
+    els.btnClearHistory.onclick = () => {
+        if (els.btnClearHistory.classList.contains('confirm-clear')) {
+            DataManager.clearHistory();
+            renderHistory();
+            showToast("历史记录已清空", "success");
+            els.btnClearHistory.textContent = "一键清空";
+            els.btnClearHistory.classList.remove('confirm-clear', 'btn-warning');
+            els.btnClearHistory.classList.add('btn-danger');
+        } else {
+            els.btnClearHistory.textContent = "确定清空?";
+            els.btnClearHistory.classList.remove('btn-danger');
+            els.btnClearHistory.classList.add('btn-warning', 'confirm-clear');
+            showToast("再次点击以确认清空", "info");
+            setTimeout(() => {
+                els.btnClearHistory.textContent = "一键清空";
+                els.btnClearHistory.classList.remove('confirm-clear', 'btn-warning');
+                els.btnClearHistory.classList.add('btn-danger');
+            }, 3000);
+        }
+    };
 
     els.closeBtns.forEach(btn => btn.onclick = (e) => {
         closeModal(e.target.closest('.modal'));
