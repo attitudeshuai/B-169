@@ -34,7 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Winner Table
         winnerTableBody: document.querySelector('#winner-table tbody'),
-        btnExport: document.getElementById('btn-export')
+        btnExport: document.getElementById('btn-export'),
+
+        // History
+        btnHistory: document.getElementById('btn-history'),
+        historyModal: document.getElementById('history-modal'),
+        historyList: document.getElementById('history-list'),
+        btnClearHistory: document.getElementById('btn-clear-history')
     };
 
     let isRunning = false;
@@ -134,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Commit
             DataManager.addWinner(winner, prizeId);
+            DataManager.addHistoryRecord(prize.name, winner);
             
             // Visual Stop
             visual.setSpinning(false);
@@ -281,6 +288,67 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     els.btnSettings.onclick = () => openModal(els.settingsModal);
+
+    els.btnHistory.onclick = () => {
+        renderHistory();
+        openModal(els.historyModal);
+    };
+
+    function renderHistory() {
+        const history = DataManager.getHistory();
+        if (history.length === 0) {
+            els.historyList.innerHTML = '<div class="history-empty">暂无历史记录</div>';
+            return;
+        }
+
+        els.historyList.innerHTML = history.map(record => {
+            const date = new Date(record.wonAt);
+            const timeStr = date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            return `
+                <div class="history-item">
+                    <div class="history-prize">${record.prizeName}</div>
+                    <div class="history-info">
+                        <div class="history-winner">${record.winnerName}</div>
+                        <div class="history-meta">${record.winnerPhone || ''} ${record.winnerDepartment ? '| ' + record.winnerDepartment : ''}</div>
+                    </div>
+                    <div class="history-time">${timeStr}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    let clearHistoryTimeout;
+    els.btnClearHistory.onclick = () => {
+        if (els.btnClearHistory.classList.contains('confirm-clear')) {
+            DataManager.clearHistory();
+            renderHistory();
+            showToast("历史记录已清空", "success");
+            
+            clearTimeout(clearHistoryTimeout);
+            els.btnClearHistory.textContent = "清空历史";
+            els.btnClearHistory.classList.remove('confirm-clear', 'btn-warning');
+            els.btnClearHistory.classList.add('btn-danger');
+        } else {
+            els.btnClearHistory.textContent = "确定清空?";
+            els.btnClearHistory.classList.remove('btn-danger');
+            els.btnClearHistory.classList.add('btn-warning', 'confirm-clear');
+            
+            showToast("再次点击以确认清空", "info");
+
+            clearHistoryTimeout = setTimeout(() => {
+                els.btnClearHistory.textContent = "清空历史";
+                els.btnClearHistory.classList.remove('confirm-clear', 'btn-warning');
+                els.btnClearHistory.classList.add('btn-danger');
+            }, 3000);
+        }
+    };
 
     els.closeBtns.forEach(btn => btn.onclick = (e) => {
         closeModal(e.target.closest('.modal'));

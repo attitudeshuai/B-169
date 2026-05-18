@@ -320,6 +320,71 @@ th {
     font-weight: 600;
 }
 
+/* History */
+.history-list {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.history-empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px 20px;
+    font-size: 1rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.history-prize {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    min-width: 80px;
+    text-align: center;
+}
+
+.history-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-winner {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #f8fafc;
+    margin-bottom: 3px;
+}
+
+.history-meta {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.history-time {
+    font-size: 0.8rem;
+    color: #64748b;
+    white-space: nowrap;
+    text-align: right;
+}
+
 /* Form Styles */
 .form-group {
     margin-bottom: 20px;
@@ -575,6 +640,41 @@ input[type="number"] {
     th, td {
         padding: 8px 6px;
         font-size: 0.8rem;
+    }
+
+    /* History mobile */
+    .history-list {
+        max-height: 50vh;
+    }
+
+    .history-item {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .history-prize {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        min-width: 60px;
+    }
+
+    .history-info {
+        flex: 1 1 150px;
+    }
+
+    .history-winner {
+        font-size: 0.9rem;
+    }
+
+    .history-meta {
+        font-size: 0.75rem;
+    }
+
+    .history-time {
+        font-size: 0.7rem;
+        width: 100%;
+        text-align: left;
     }
 
     /* Winner overlay */
