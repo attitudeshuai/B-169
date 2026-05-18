@@ -45,6 +45,7 @@
 
         <div class="control-group">
           <button id="btn-winners" class="btn btn-icon">📜 中奖名单</button>
+          <button id="btn-history" class="btn btn-icon">🕓 历史记录</button>
           <button id="btn-settings" class="btn btn-icon">⚙️ 设置</button>
         </div>
       </div>
@@ -105,6 +106,20 @@
       </div>
     </div>
   </div>
+
+  <!-- History Panel -->
+  <aside id="history-panel" class="history-panel hidden">
+    <div class="history-panel-header">
+      <h3>🕓 历史记录</h3>
+      <button class="close-history">&times;</button>
+    </div>
+    <div class="history-panel-body" id="history-list">
+      <!-- History records injected here -->
+    </div>
+    <div class="history-panel-footer">
+      <button id="btn-clear-history" class="btn btn-danger small">清空历史</button>
+    </div>
+  </aside>
 
   <!-- Celebration Overlay -->
   <div id="celebration-overlay" class="overlay hidden">

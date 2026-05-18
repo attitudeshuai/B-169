@@ -34,7 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Winner Table
         winnerTableBody: document.querySelector('#winner-table tbody'),
-        btnExport: document.getElementById('btn-export')
+        btnExport: document.getElementById('btn-export'),
+
+        // History Panel
+        btnHistory: document.getElementById('btn-history'),
+        historyPanel: document.getElementById('history-panel'),
+        historyList: document.getElementById('history-list'),
+        btnClearHistory: document.getElementById('btn-clear-history'),
+        closeHistoryBtns: document.querySelectorAll('.close-history')
     };
 
     let isRunning = false;
@@ -85,6 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const emptyMsg = DataManager.state.participants.length > 0 ? "所有人都中奖了!" : "等待导入数据...";
             visual.updateParticipants(remaining, emptyMsg);
         }
+
+        // Refresh history list (only if panel open)
+        if (!els.historyPanel.classList.contains('hidden')) {
+            renderHistory();
+        }
     }
 
     function toggleLottery() {
@@ -134,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Commit
             DataManager.addWinner(winner, prizeId);
+            DataManager.addHistoryRecord(prize, winner);
             
             // Visual Stop
             visual.setSpinning(false);
@@ -171,6 +184,26 @@ document.addEventListener('DOMContentLoaded', () => {
             els.btnAction.textContent = "停止";
             els.btnAction.classList.replace('btn-primary', 'btn-danger');
         }
+    }
+
+    function renderHistory() {
+        const records = DataManager.getHistory();
+        if (records.length === 0) {
+            els.historyList.innerHTML = '<div class="history-empty">暂无历史记录，开始抽奖吧！</div>';
+            return;
+        }
+        els.historyList.innerHTML = records.map(r => {
+            const d = new Date(r.timestamp);
+            const dateStr = d.toLocaleString('zh-CN', { hour12: false });
+            return `
+                <div class="history-record" data-id="${r.id}">
+                    <div class="history-record-prize">🏆 ${r.prizeName}</div>
+                    <div class="history-record-winner">${r.winnerName}</div>
+                    <div class="history-record-info">${r.winnerPhone || ''} ${r.winnerDepartment ? '| ' + r.winnerDepartment : ''}</div>
+                    <div class="history-record-time">🕐 ${dateStr}</div>
+                </div>
+            `;
+        }).join('');
     }
 
     function showCelebration(winner, prizeName) {
@@ -287,6 +320,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     els.btnCloseOverlay.onclick = () => els.overlay.classList.add('hidden');
+
+    // History Panel
+    els.btnHistory.onclick = () => {
+        renderHistory();
+        els.historyPanel.classList.remove('hidden');
+    };
+
+    els.closeHistoryBtns.forEach(btn => btn.onclick = () => {
+        els.historyPanel.classList.add('hidden');
+    });
+
+    els.btnClearHistory.onclick = () => {
+        if (DataManager.getHistory().length === 0) {
+            showToast('历史记录已经是空的', 'info');
+            return;
+        }
+        if (confirm('确定要清空所有历史记录吗？此操作不可撤销。')) {
+            DataManager.clearHistory();
+            renderHistory();
+            showToast('历史记录已清空', 'success');
+        }
+    };
 
     // Settings logic
     els.btnAddPrize.onclick = () => {

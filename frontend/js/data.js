@@ -9,7 +9,8 @@ const DataManager = {
             { id: '3', name: '二等奖', count: 5 }
         ],
         currentPrizeId: '1',
-        bgImage: ''
+        bgImage: '',
+        history: []
     },
 
     init() {
@@ -49,6 +50,7 @@ const DataManager = {
             { id: '3', name: '二等奖', count: 5 }
         ]; // 重置为默认奖项
         this.state.currentPrizeId = '1';
+        this.state.history = [];
         this.save();
     },
 
@@ -81,5 +83,39 @@ const DataManager = {
     setBackground(url) {
         this.state.bgImage = url;
         this.save();
+    },
+
+    addHistoryRecord(prize, winner, timestamp) {
+        const record = {
+            id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+            prizeName: prize.name,
+            prizeId: prize.id,
+            winnerName: winner.name,
+            winnerPhone: winner.phone || '',
+            winnerDepartment: winner.department || '',
+            timestamp: timestamp || new Date().toISOString()
+        };
+        this.state.history.unshift(record);
+        this.save();
+        return record;
+    },
+
+    getHistory() {
+        return this.state.history || [];
+    },
+
+    clearHistory() {
+        this.state.history = [];
+        this.save();
+    },
+
+    deleteHistoryRecord(id) {
+        const idx = this.state.history.findIndex(r => r.id === id);
+        if (idx !== -1) {
+            this.state.history.splice(idx, 1);
+            this.save();
+            return true;
+        }
+        return false;
     }
 };
