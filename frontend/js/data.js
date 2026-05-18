@@ -3,6 +3,7 @@ const DataManager = {
     state: {
         participants: [],
         winners: [],
+        history: [],
         prizes: [
             { id: '1', name: '特等奖', count: 1 },
             { id: '2', name: '一等奖', count: 3 },
@@ -16,7 +17,19 @@ const DataManager = {
         const saved = localStorage.getItem('lottery_state_v2');
         if (saved) {
             try {
-                this.state = JSON.parse(saved);
+                const parsed = JSON.parse(saved);
+                this.state = {
+                    participants: parsed.participants || [],
+                    winners: parsed.winners || [],
+                    history: parsed.history || [],
+                    prizes: parsed.prizes || [
+                        { id: '1', name: '特等奖', count: 1 },
+                        { id: '2', name: '一等奖', count: 3 },
+                        { id: '3', name: '二等奖', count: 5 }
+                    ],
+                    currentPrizeId: parsed.currentPrizeId || '1',
+                    bgImage: parsed.bgImage || ''
+                };
             } catch (e) {
                 console.error("Failed to load state", e);
             }
@@ -80,6 +93,35 @@ const DataManager = {
 
     setBackground(url) {
         this.state.bgImage = url;
+        this.save();
+    },
+
+    addHistoryRecord(prizeName, winner) {
+        const record = {
+            id: 'hist_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+            prizeName: prizeName,
+            winner: {
+                name: winner.name,
+                phone: winner.phone || '',
+                department: winner.department || ''
+            },
+            time: new Date().toISOString()
+        };
+        this.state.history.unshift(record);
+        this.save();
+        return record;
+    },
+
+    getHistory() {
+        if (!Array.isArray(this.state.history)) {
+            this.state.history = [];
+            this.save();
+        }
+        return this.state.history;
+    },
+
+    clearHistory() {
+        this.state.history = [];
         this.save();
     }
 };
