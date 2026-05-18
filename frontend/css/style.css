@@ -411,6 +411,115 @@ input[type="number"] {
     font-weight: 600;
 }
 
+/* History Panel */
+.history-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 380px;
+    height: 100vh;
+    background: #1e293b;
+    border-left: 1px solid var(--glass-border);
+    box-shadow: -10px 0 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    z-index: 80;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.history-panel:not(.hidden) {
+    transform: translateX(0);
+}
+
+.history-panel-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.history-panel-header h3 {
+    font-size: 1.2rem;
+    color: #ffd700;
+}
+
+.history-panel-header .close-history {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.history-panel-header .close-history:hover {
+    color: #ffd700;
+}
+
+.history-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.history-empty {
+    text-align: center;
+    color: #64748b;
+    padding: 40px 20px;
+    font-size: 0.95rem;
+}
+
+.history-record {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.history-record:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.history-record-prize {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+.history-record-winner {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.history-record-info {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.history-record-time {
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.history-panel-footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     /* Tablet adjustments */
